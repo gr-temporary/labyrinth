@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Editor</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<div class="container">
+		<div class="main-deck">
+			<menu-column></menu-column>
+			<editor-column></editor-column>
+			<properties-column></properties-column>
+		</div>
+	</div>
+
+	<script type="text/x-template" id="menu-column">
+		<div class="column menu">
+			<div class="level-name">
+				<input type="text" name="level-name" placeholder="Level name">
+			</div>
+			<div class="level-commands">
+				<button class="button-primary">Save</button>
+				<button>Reset</button>
+			</div>
+			<ul class="level-list">
+				<li v-for="level in levels">{{level.name}}</li>
+			</ul>
+		</div>
+	</script>
+
+	<script type="text/x-template" id="editor-column">
+		<div class="column editor"></div>
+	</script>
+
+	<script type="text/x-template" id="properties-column">
+		<div class="column properties"></div>
+	</script>
+
+	<script src="js/vue.js"></script>
+	<script src="js/editor.js"></script>
+</body>
+</html>
