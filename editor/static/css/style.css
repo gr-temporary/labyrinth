@@ -25,3 +25,8 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
+.level-list li {
+	display: block;
+	cursor: pointer;
+}
