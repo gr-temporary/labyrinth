@@ -25,3 +25,11 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
+.level-commands {
+	display: flex;
+}
+
+.level-commands .btn {
+	flex: 1;
+}
