@@ -2,6 +2,14 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 
+const LEVELS_DIR = "levels";
+
+function ensureDir(dir) {
+    if(!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+}
+
 function processApi(request, response) {
 	let body = [];
 	request.on('data', (chunk) => {
@@ -10,16 +18,35 @@ function processApi(request, response) {
 	 	body = Buffer.concat(body).toString();
 		
 		let data = JSON.parse(body);
+        console.log(data);
+
+        ensureDir(LEVELS_DIR);
+
+        let responseData = {
+            status: 'ok'
+        };
+
+        switch(data.action) {
+            case 'list':
+                let files = fs.readdirSync(LEVELS_DIR);
+                responseData.list = files.map(x => x.slice(0, -5));
+            break;
+
+            case 'get':
+                let file = fs.readFileSync(LEVELS_DIR + "/" + data.filename + ".json", { encoding: 'utf8' });
+                responseData.level = JSON.parse(file);
+            break;
+        }
 
 		response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.end('{"status":"ok"}', 'utf-8');
+        response.end(JSON.stringify(responseData), 'utf-8');
 	});
 }
 
 function processFile(request, response) {
 	let filePath = './static' + request.url;
-    if (filePath == './')
-        filePath = './index.html';
+    if (filePath.match(/\/$/))
+        filePath += 'index.html';
 
     let extname = path.extname(filePath);
     let contentType = 'text/html';
@@ -43,6 +70,8 @@ function processFile(request, response) {
             contentType = 'audio/wav';
             break;
     }
+
+    console.log(filePath);
 
     fs.readFile(filePath, function(error, content) {
         if (error) {

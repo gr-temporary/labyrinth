@@ -26,7 +26,10 @@ body {
 	flex-direction: column;
 }
 
-.level-list li {
-	display: block;
-	cursor: pointer;
+.level-commands {
+	display: flex;
+}
+
+.level-commands .btn {
+	flex: 1;
 }
