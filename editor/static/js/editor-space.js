@@ -37,6 +37,11 @@
 		this.height = 2 * h2;
 	}
 
+	let leveldata = {
+		rooms: {},
+		doors: {}
+	};
+
 	Vue.component('level-editor', {
 		template: '#level-editor',
 		data: function() {
@@ -59,6 +64,7 @@
 				if(!this.context) {
 					return;
 				}
+				this.viewport.update(this.screenWidth, this.screenHeight, this.camera.x, this.camera.y, this.camera.scale);
 
 				let ctx = this.context;
 				ctx.fillStyle = '#aaa';
@@ -68,30 +74,44 @@
 			},		
 			drawGrid: function() {
 				let unit = UNIT * this.camera.scale;
-				let count = this.viewport.width / UNIT;
-				let offset = this.camera.x % UNIT;
 
 				let ctx = this.context;
 
 				ctx.strokeStyle = '#eee';
 				ctx.lineWidth = 1;
 
+				let start = this.viewport.left / UNIT | 0;
+				let end = this.viewport.right / UNIT | 0;
+				let count = end - start;
+
 				ctx.beginPath();
-				for(let i=0; i<count; i++) {
-					let x = offset + i * this.screenWidth / count;
+				for(let i=start; i<=end; i++) {
+					let x = (i * UNIT / count - this.camera.x) * this.camera.scale;
 					ctx.moveTo(x, 0);
 					ctx.lineTo(x, this.screenHeight);
 				}
 
-				count = this.viewport.height / UNIT;
-				offset = this.camera.y % UNIT;
-				for(let i=0; i<count; i++) {
-					let y = offset + i * this.screenHeight / count;
+				start = this.viewport.top / UNIT | 0;
+				end = this.viewport.bottom / UNIT | 0;
+				count = end - start;
+				for(let i=start; i<=end; i++) {
+					let y = (i * UNIT / count - this.camera.y) * this.camera.scale;
 					ctx.moveTo(0, y);
 					ctx.lineTo(this.screenWidth, y);
 				}
 
 				ctx.stroke();
+
+				/*ctx.lineWidth = 2;
+				ctx.beginPath();
+				ctx.moveTo()*/
+			},
+			addZoom: function(step) {
+				this.camera.scale += step;
+				this.draw();
+			},
+			setLevelData: function(data) {
+				console.log("Data set!");
 			}
 		},
 		mounted: function() {
@@ -99,7 +119,6 @@
 			this.updateSize();
 			this.camera.x = -this.screenWidth / 2;
 			this.camera.y = -this.screenHeight / 2;
-			this.viewport.update(this.screenWidth, this.screenHeight, this.camera.x, this.camera.y, this.camera.scale);
 			this.draw();
 		}
 	});

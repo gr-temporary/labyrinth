@@ -72,6 +72,7 @@ var app = new Vue({
 				let data = response.body.level;
 				this.activeLevel.name = data.name;
 				// pass data to editor
+				this.$refs.editor.setLevelData(data.level);
 				this.status = '';
 			});
 		},
