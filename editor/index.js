@@ -29,12 +29,29 @@ function processApi(request, response) {
         switch(data.action) {
             case 'list':
                 let files = fs.readdirSync(LEVELS_DIR);
-                responseData.list = files.map(x => x.slice(0, -5));
+                responseData.list = files.filter(x => x.match(/\.json$/)).map(x => x.slice(0, -5));
+
+                console.log(responseData);
             break;
 
             case 'get':
-                let file = fs.readFileSync(LEVELS_DIR + "/" + data.filename + ".json", { encoding: 'utf8' });
-                responseData.level = JSON.parse(file);
+                let fileGet = fs.readFileSync(LEVELS_DIR + "/" + data.name + ".json", { encoding: 'utf8' });
+                responseData.level = JSON.parse(fileGet);
+            break;
+
+            case 'create':
+                let fileCreate = { name: data.name, levelData: {} };
+                fs.writeFileSync(LEVELS_DIR + "/" + data.name + ".json", JSON.stringify(fileCreate));
+                responseData.name = data.name;
+            break;
+
+            case 'delete':
+                fs.unlinkSync(LEVELS_DIR + "/" + data.name + ".json");
+            break;
+
+            case 'save':
+                let fileSave = { name: data.name, levelData: data.level };
+                fs.writeFileSync(LEVELS_DIR + "/" + data.name + ".json", JSON.stringify(fileSave));
             break;
         }
 
@@ -71,8 +88,6 @@ function processFile(request, response) {
             break;
     }
 
-    console.log(filePath);
-
     fs.readFile(filePath, function(error, content) {
         if (error) {
             if(error.code == 'ENOENT'){
@@ -95,7 +110,7 @@ function processFile(request, response) {
 }
 
 http.createServer(function (request, response) {
-    console.log('request starting...');
+    //console.log('request starting...');
 
     let url = request.url;
 
