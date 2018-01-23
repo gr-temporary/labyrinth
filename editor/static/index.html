@@ -45,17 +45,22 @@
 
 	<script type="text/x-template" id="level-editor">
 		<div class="editor-column">
-			<div class="screen-column">
+			<div class="screen-column" ref="screen">
 				<canvas ref="canvas"></canvas>
 			</div>
 			<div class="tools-column">
-				
+				<div class="form-group">
+					<h6><span>Rooms</span></h6>
+					<button class="btn btn-primary btn-block pad-ver"><i class="fas fa-plus"></i> Add room</button>
+					<button class="btn btn-danger"><i class="fas fa-fire"></i></button>
+				</div>
 			</div>
 		</div>
 	</script>
 
 	<script src="js/vue.js"></script>
 	<script src="js/vue-resource.js"></script>
+	<script src="js/editor-space.js"></script>
 	<script src="js/editor.js"></script>
 </body>
 </html>

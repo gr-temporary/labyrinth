@@ -65,14 +65,32 @@ body {
 
 .editor-column {
 	flex: 1;
+	display: flex;
 }
 
 .screen-column {
 	flex: 1;
+	height: 100%;
+	font-size: 0;
 }
 
 .tools-column {
 	flex: 0 0 200px;
 	display: flex;
 	flex-direction: column;
+}
+
+.form-group {
+	border: 1px solid #aaa;
+	border-radius: 0.5em;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+.form-group h6 {
+	margin-top: -1em;
+}
+
+.form-group h6 span {
+	background-color: white;
 }

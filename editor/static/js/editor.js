@@ -21,23 +21,6 @@ Vue.component('new-level-form', {
 	}
 });
 
-Vue.component('level-editor', {
-	template: '#level-editor',
-	data: function() {
-		return {
-			
-		};
-	},
-	methods: {
-		
-	},
-	created: function() {
-
-	}
-});
-
-
-
 var app = new Vue({
 	el: ".main-deck",
 	data: {
