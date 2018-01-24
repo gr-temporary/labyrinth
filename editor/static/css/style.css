@@ -104,3 +104,16 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
+.screen {
+	cursor: grab;
+	cursor: -webkit-grab;
+}
+
+.screen.panning {
+	cursor: -webkit-grabbing;
+}
+
+.screen.highlight {
+	cursor: crosshair;
+}

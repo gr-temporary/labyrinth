@@ -2,6 +2,10 @@
 (function() {
 
 	const UNIT = 20; // px
+	const FREE = 0;
+	const PANNING = 1;
+	const HIGHLIGHT = 2;
+	const MOVING = 3;
 
 	const Transform = function() {
 		this.x = 0;
@@ -43,12 +47,20 @@
 		this.scaleY = this.height / this.viewport.height;
 	}
 
-	Renderer.prototype.getX = function (x) {
+	Renderer.prototype.getX = Renderer.prototype.worldToScreenX = function (x) {
 		return this.scaleX * x - this.camera.x + this.width / 2;
 	}
 
-	Renderer.prototype.getY = function (y) {
+	Renderer.prototype.getY = Renderer.prototype.worldToScreenX = function (y) {
 		return this.scaleY * y - this.camera.y + this.height / 2;
+	}
+
+	Renderer.prototype.screenToWorldX = function (x) {
+		return this.viewport.left + (x / this.width) * this.viewport.width;
+	}
+
+	Renderer.prototype.screenToWorldY = function (y) {
+		return this.viewport.top + (y / this.height) * this.viewport.height;
 	}
 
 	Renderer.prototype.clear = function (color) {
@@ -106,7 +118,7 @@
 				this.renderer.update();
 
 				this.renderer.clear();
-				
+
 				this.drawGrid();
 			},		
 			drawGrid: function() {

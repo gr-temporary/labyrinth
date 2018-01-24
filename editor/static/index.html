@@ -46,7 +46,7 @@
 	<script type="text/x-template" id="level-editor">
 		<div class="editor-column">
 			<div class="screen-column" ref="screen">
-				<canvas ref="canvas"></canvas>
+				<canvas ref="canvas" class="screen"></canvas>
 				<div class="zoom-tools">
 					<button class="btn btn-warning pad-ver pad-hor" @click="addZoom(1)" v-bind:disabled="zoom > 20"><i class="fas fa-plus"></i></button>
 					<button class="btn btn-warning pad-ver pad-hor" @click="addZoom(-1)" v-bind:disabled="zoom < 2"><i class="fas fa-minus"></i></button>
