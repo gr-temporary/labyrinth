@@ -7,14 +7,6 @@
 		this.x = 0;
 		this.y = 0;
 		this.scale = 1;
-		this.rotation = 0;
-	}
-
-	Transform.prototype.applyContenxt = function (ctx) {
-		ctx.resetTransform();
-		ctx.scate(this.scale, -this.scale);
-		ctx.rotate(this.rotation);
-		ctx.translate(this.x, this.y);
 	}
 
 	const Rect = function() {
@@ -37,6 +29,50 @@
 		this.height = 2 * h2;
 	}
 
+	const Renderer = function(context, viewport, camera) {
+		this.context = context;
+		this.viewport = viewport;
+		this.camera = camera;
+		this.update();
+	}
+
+	Renderer.prototype.update = function () {
+		this.width = this.context.canvas.width;
+		this.height = this.context.canvas.height;
+		this.scaleX = this.width / this.viewport.width;
+		this.scaleY = this.height / this.viewport.height;
+	}
+
+	Renderer.prototype.getX = function (x) {
+		return this.scaleX * x - this.camera.x + this.width / 2;
+	}
+
+	Renderer.prototype.getY = function (y) {
+		return this.scaleY * y - this.camera.y + this.height / 2;
+	}
+
+	Renderer.prototype.clear = function (color) {
+		let ctx = this.context;
+		ctx.fillStyle = color || "#aaa";
+		ctx.fillRect(0, 0, this.width, this.height);
+	}
+
+	Renderer.prototype.beginPath = function () {
+		this.context.beginPath();
+	}
+
+	Renderer.prototype.moveTo = function (x, y) {
+		x = this.getX(x);
+		y = this.getY(y);
+		this.context.moveTo(x, y);
+	}
+
+	Renderer.prototype.lineTo = function (x, y) {
+		x = this.getX(x);
+		y = this.getY(y);
+		this.context.lineTo(x, y);
+	}
+
 	let leveldata = {
 		rooms: {},
 		doors: {}
@@ -49,8 +85,10 @@
 				context: null,
 				screenWidth: 0,
 				screenHeight: 0,
+				zoom: 10,
 				camera: new Transform(),
-				viewport: new Rect()
+				viewport: new Rect(),
+				renderer: null
 			};
 		},
 		methods: {
@@ -65,15 +103,13 @@
 					return;
 				}
 				this.viewport.update(this.screenWidth, this.screenHeight, this.camera.x, this.camera.y, this.camera.scale);
+				this.renderer.update();
 
-				let ctx = this.context;
-				ctx.fillStyle = '#aaa';
-				ctx.fillRect(0, 0, this.screenWidth, this.screenHeight);
-
+				this.renderer.clear();
+				
 				this.drawGrid();
 			},		
 			drawGrid: function() {
-				let unit = UNIT * this.camera.scale;
 
 				let ctx = this.context;
 
@@ -82,32 +118,27 @@
 
 				let start = this.viewport.left / UNIT | 0;
 				let end = this.viewport.right / UNIT | 0;
-				let count = end - start;
 
 				ctx.beginPath();
 				for(let i=start; i<=end; i++) {
-					let x = (i * UNIT / count - this.camera.x) * this.camera.scale;
-					ctx.moveTo(x, 0);
-					ctx.lineTo(x, this.screenHeight);
+					let x = i * UNIT;
+					this.renderer.moveTo(x, this.viewport.top);
+					this.renderer.lineTo(x, this.viewport.bottom);
 				}
 
 				start = this.viewport.top / UNIT | 0;
 				end = this.viewport.bottom / UNIT | 0;
-				count = end - start;
 				for(let i=start; i<=end; i++) {
-					let y = (i * UNIT / count - this.camera.y) * this.camera.scale;
-					ctx.moveTo(0, y);
-					ctx.lineTo(this.screenWidth, y);
+					let y = i * UNIT;
+					this.renderer.moveTo(this.viewport.left, y);
+					this.renderer.lineTo(this.viewport.right, y);
 				}
 
 				ctx.stroke();
-
-				/*ctx.lineWidth = 2;
-				ctx.beginPath();
-				ctx.moveTo()*/
 			},
 			addZoom: function(step) {
-				this.camera.scale += step;
+				this.zoom += step;
+				this.camera.scale = this.zoom * this.zoom / 100;
 				this.draw();
 			},
 			setLevelData: function(data) {
@@ -116,9 +147,8 @@
 		},
 		mounted: function() {
 			this.context = this.$refs.canvas.getContext("2d");
+			this.renderer = new Renderer(this.context, this.viewport, this.camera);
 			this.updateSize();
-			this.camera.x = -this.screenWidth / 2;
-			this.camera.y = -this.screenHeight / 2;
 			this.draw();
 		}
 	});
