@@ -126,9 +126,13 @@ Vue.component('editor-viewport', {
 			y = this.getY(y);
 			this.context.lineTo(x, y);
 		},
-		strokeRect: function(x, y, w, h, hud) {
+		strokeRect: function(x, y, w, h, local) {
 			x = this.getX(x);
 			y = this.getY(y);
+			if(local) {
+				w = w / this.scale.x;
+				h = h / this.scale.y;
+			}
 			this.context.strokeRect(x, y, w, h);
 		},
 

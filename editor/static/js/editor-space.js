@@ -64,12 +64,6 @@
 				this.renderer.moveTo(viewport.left, 0);
 				this.renderer.lineTo(viewport.right, 0);
 				ctx.stroke();
-
-				ctx.strokeStyle = "#f00";
-				this.renderer.strokeRect(viewport.left, viewport.top, UNIT, UNIT);
-				this.renderer.strokeRect(viewport.right - UNIT / this.renderer.scale.x, viewport.top, UNIT, UNIT);
-				this.renderer.strokeRect(viewport.right - UNIT / this.renderer.scale.x, viewport.bottom - UNIT / this.renderer.scale.y, UNIT, UNIT);
-				this.renderer.strokeRect(viewport.left, viewport.bottom - UNIT / this.renderer.scale.y, UNIT, UNIT);
 			},
 			setLevelData: function(data) {
 				console.log("Data set!");
