@@ -7,6 +7,14 @@
 	const HIGHLIGHT = 2;
 	const MOVING = 3;
 
+	const COLOR_SCHEME = {
+		bg: "#094A5B",
+		grid: "#86C2B4",
+		text: "#F4E9C1",
+		line: "#317174",
+		fill: "#0F5672"
+	};
+
 	let leveldata = {
 		rooms: {},
 		doors: {}
@@ -25,16 +33,16 @@
 					return;
 				}
 
-				this.renderer.clear();
+				this.renderer.clear(COLOR_SCHEME.bg);
 
 				this.drawGrid();
-			},		
+			},
 			drawGrid: function() {
 
 				let ctx = this.renderer.context;
 				let viewport = this.renderer.viewport;
 
-				ctx.strokeStyle = '#eee';
+				ctx.strokeStyle = COLOR_SCHEME.grid;
 				ctx.lineWidth = 1;
 
 				let start = viewport.left / UNIT | 0;
@@ -57,6 +65,7 @@
 
 				ctx.stroke();
 
+				// center lines
 				ctx.lineWidth = 3;
 				ctx.beginPath();
 				this.renderer.moveTo(0, viewport.top);

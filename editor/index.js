@@ -16,7 +16,7 @@ function processApi(request, response) {
 		body.push(chunk);
 	}).on('end', () => {
 	 	body = Buffer.concat(body).toString();
-		
+
 		let data = JSON.parse(body);
         console.log(data);
 
@@ -79,7 +79,7 @@ function processFile(request, response) {
             break;
         case '.png':
             contentType = 'image/png';
-            break;      
+            break;
         case '.jpg':
             contentType = 'image/jpg';
             break;
@@ -99,7 +99,7 @@ function processFile(request, response) {
             else {
                 response.writeHead(500);
                 response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
-                response.end(); 
+                response.end();
             }
         }
         else {
@@ -121,3 +121,5 @@ http.createServer(function (request, response) {
     }
 
 }).listen(9000);
+
+console.log("Server running on port 9000");
